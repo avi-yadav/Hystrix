@@ -17,7 +17,6 @@ package com.netflix.hystrix.contrib.javanica.command;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCollapser;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.aop.aspectj.WeavingMode;
 import com.netflix.hystrix.contrib.javanica.command.closure.Closure;
 import org.aspectj.lang.JoinPoint;
 

@@ -15,7 +15,7 @@
  */
 package com.netflix.hystrix.contrib.javanica.utils;
 
-import com.netflix.hystrix.contrib.javanica.aop.aspectj.WeavingMode;
+import com.netflix.hystrix.contrib.javanica.aop.WeavingMode;
 
 import java.util.Arrays;
 

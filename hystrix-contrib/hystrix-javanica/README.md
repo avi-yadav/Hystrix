@@ -19,7 +19,7 @@ To implement AOP functionality in the project was used AspectJ library. If in yo
 ```xml
 <aspects>
         ...
-        <aspect name="com.netflix.hystrix.contrib.javanica.aop.aspectj.HystrixCommandAspect"/>
+        <aspect name="HystrixCommandAspect"/>
         ...
 </aspects>
 ```
@@ -30,7 +30,7 @@ If you use Spring AOP in your project then you need to add specific configuratio
 
 ```xml
     <aop:aspectj-autoproxy/>
-    <bean id="hystrixAspect" class="com.netflix.hystrix.contrib.javanica.aop.aspectj.HystrixCommandAspect"></bean>
+    <bean id="hystrixAspect" class="HystrixCommandAspect"></bean>
 ```
 
 Or if you are using Spring code configuration:
@@ -448,14 +448,14 @@ Example:
 ```xml
 <aspects>
         ...
-        <aspect name="com.netflix.hystrix.contrib.javanica.aop.aspectj.HystrixCacheAspect"/>
+        <aspect name="HystrixCacheAspect"/>
         ...
 </aspects>
 
 <!-- or Spring conf -->
 
     <aop:aspectj-autoproxy/>
-    <bean id="hystrixAspect" class="com.netflix.hystrix.contrib.javanica.aop.aspectj.HystrixCacheAspect"></bean>
+    <bean id="hystrixAspect" class="HystrixCacheAspect"></bean>
 
 ```
 
