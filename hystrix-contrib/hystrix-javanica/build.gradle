@@ -100,8 +100,8 @@ dependencies {
     compile "org.aspectj:aspectjrt:$aspectjVersion"
 
     compile 'com.google.guava:guava:15.0'
-    compile 'com.google.inject:guice:3.0'
-    //compile 'aopalliance:aopalliance:1.0'
+    compile 'com.google.inject:guice:4.0'
+    compile 'aopalliance:aopalliance:1.0'
     compile 'commons-collections:commons-collections:3.2.1'
     compile 'org.apache.commons:commons-lang3:3.1'
     compile 'com.google.code.findbugs:jsr305:2.0.0'
@@ -116,17 +116,23 @@ dependencies {
     testCompile 'log4j:log4j:1.2.17'
     testCompile 'org.slf4j:slf4j-log4j12:1.7.7'
 }
+//version = 1.6
 
 //apply plugin: 'java'
 //apply plugin: 'maven-publish'
 //
-//group = 'org.gradle.sample'
-//version = '1.0'
+//publishing {
+//    publications {
+//        nebula(MavenPublication) {
+//            from components.java
+//        }
+//    }
+//}
 //
 //publishing {
 //    repositories {
 //        maven {
-//            // change to point to your repo, e.g. http://my.org/repo
+//            version = '1.0mvn-SNAPSHOT'
 //            url "file://Users/gautham.srinivas/.m2/repository"
 //        }
 //    }
