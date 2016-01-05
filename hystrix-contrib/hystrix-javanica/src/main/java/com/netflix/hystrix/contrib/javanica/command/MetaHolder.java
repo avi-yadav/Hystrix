@@ -18,6 +18,7 @@ package com.netflix.hystrix.contrib.javanica.command;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCollapser;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.command.closure.Closure;
+import org.aopalliance.intercept.MethodInvocation;
 import org.aspectj.lang.JoinPoint;
 
 import java.lang.reflect.Method;
@@ -51,6 +52,7 @@ public class MetaHolder {
     private final boolean fallback;
     private boolean extendedParentFallback;
     private final JoinPoint joinPoint;
+    private final MethodInvocation methodInvocation;
 
     private MetaHolder(Builder builder) {
         this.hystrixCommand = builder.hystrixCommand;
@@ -73,6 +75,7 @@ public class MetaHolder {
         this.extendedFallback = builder.extendedFallback;
         this.fallback = builder.fallback;
         this.extendedParentFallback = builder.extendedParentFallback;
+        this.methodInvocation = builder.methodInvocation;
     }
 
     public static Builder builder() {
@@ -175,6 +178,10 @@ public class MetaHolder {
         return fallbackExecutionType;
     }
 
+    public MethodInvocation getMethodInvocation() {
+        return methodInvocation;
+    }
+
     public static final class Builder {
 
         private HystrixCollapser hystrixCollapser;
@@ -197,6 +204,7 @@ public class MetaHolder {
         private boolean fallback;
         private boolean extendedParentFallback;
         private JoinPoint joinPoint;
+        private MethodInvocation methodInvocation;
 
 
         public Builder hystrixCollapser(HystrixCollapser hystrixCollapser) {
@@ -296,6 +304,15 @@ public class MetaHolder {
 
         public Builder extendedFallback(boolean extendedFallback) {
             this.extendedFallback = extendedFallback;
+            return this;
+        }
+
+        public MethodInvocation getMethodInvocation() {
+            return methodInvocation;
+        }
+
+        public Builder methodInvocation(MethodInvocation methodInvocation) {
+            this.methodInvocation = methodInvocation;
             return this;
         }
 

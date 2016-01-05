@@ -7,6 +7,7 @@ import com.netflix.hystrix.contrib.javanica.command.ExecutionType;
 import com.netflix.hystrix.contrib.javanica.command.MetaHolder;
 import com.netflix.hystrix.contrib.javanica.utils.FallbackMethod;
 import com.netflix.hystrix.contrib.javanica.utils.MethodProvider;
+import org.aopalliance.intercept.MethodInvocation;
 import org.aspectj.lang.ProceedingJoinPoint;
 
 import java.lang.reflect.Method;
@@ -24,7 +25,7 @@ import static com.netflix.hystrix.contrib.javanica.utils.ajc.AjcUtils.getAjcMeth
  */
 public class CollapserMetaHolderFactory extends MetaHolderFactory {
     @Override
-    public MetaHolder create(Object proxy, Method collapserMethod, Object obj, Object[] args, final ProceedingJoinPoint joinPoint) {
+    public MetaHolder.Builder create(Object proxy, Method collapserMethod, Object obj, Object[] args) {
         HystrixCollapser hystrixCollapser = collapserMethod.getAnnotation(HystrixCollapser.class);
         if (collapserMethod.getParameterTypes().length > 1 || collapserMethod.getParameterTypes().length == 0) {
             throw new IllegalStateException("Collapser method must have one argument: " + collapserMethod);
@@ -68,8 +69,7 @@ public class CollapserMetaHolderFactory extends MetaHolderFactory {
         // that should be invoked upon intercepted method, its required only for underlying batch command
         MetaHolder.Builder builder = MetaHolder.builder()
                 .args(args).method(batchCommandMethod).obj(obj).proxyObj(proxy)
-                .defaultGroupKey(obj.getClass().getSimpleName())
-                .joinPoint(joinPoint);
+                .defaultGroupKey(obj.getClass().getSimpleName());
 
         if (isCompileWeaving()) {
             builder.ajcMethod(getAjcMethodAroundAdvice(obj.getClass(), batchCommandMethod.getName(), List.class));
@@ -89,7 +89,7 @@ public class CollapserMetaHolderFactory extends MetaHolderFactory {
                     .fallbackMethod(fallbackMethod.getMethod())
                     .fallbackExecutionType(ExecutionType.getExecutionType(fallbackMethod.getMethod().getReturnType()));
         }
-        return builder.build();
+        return builder;
     }
 
     private Class<?> getGenericParameter(Type type) {

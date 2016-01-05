@@ -13,6 +13,7 @@ import java.lang.reflect.Method;
 
 import static com.netflix.hystrix.contrib.javanica.utils.AopUtils.getMethodFromTarget;
 import static com.netflix.hystrix.contrib.javanica.utils.EnvUtils.isCompileWeaving;
+import static com.netflix.hystrix.contrib.javanica.utils.ajc.AjcUtils.getAjcMethod;
 import static com.netflix.hystrix.contrib.javanica.utils.ajc.AjcUtils.getAjcMethodAroundAdvice;
 
 /**
@@ -24,7 +25,11 @@ public abstract class MetaHolderFactory {
         Object obj = joinPoint.getTarget();
         Object[] args = joinPoint.getArgs();
         Object proxy = joinPoint.getThis();
-        return create(proxy, method, obj, args, joinPoint);
+        MetaHolder.Builder builder = create(proxy, method, obj, args).joinPoint(joinPoint);
+        if(isCompileWeaving()) {
+            builder.ajcMethod(getAjcMethodFromTarget(joinPoint));
+        }
+        return builder.build();
     }
 
     public MetaHolder create(final MethodInvocation invocation) {
@@ -32,20 +37,17 @@ public abstract class MetaHolderFactory {
         Object obj = invocation.getThis();
         Object[] args = invocation.getArguments();
         Object proxy = invocation.getThis();
-        return create(proxy, method, obj, args, null);
+        return create(proxy, method, obj, args).methodInvocation(invocation).build();
     }
 
-    public abstract MetaHolder create(Object proxy, Method method, Object obj, Object[] args, final ProceedingJoinPoint joinPoint);
+    public abstract MetaHolder.Builder create(Object proxy, Method method, Object obj, Object[] args);
 
 
-    MetaHolder.Builder metaHolderBuilder(Object proxy, Method method, Object obj, Object[] args, final ProceedingJoinPoint joinPoint) {
+
+    MetaHolder.Builder metaHolderBuilder(Object proxy, Method method, Object obj, Object[] args) {
         MetaHolder.Builder builder = MetaHolder.builder()
                 .args(args).method(method).obj(obj).proxyObj(proxy)
-                .defaultGroupKey(obj.getClass().getSimpleName())
-                .joinPoint(joinPoint);
-        if (isCompileWeaving()) {
-            builder.ajcMethod(getAjcMethodFromTarget(joinPoint));
-        }
+                .defaultGroupKey(obj.getClass().getSimpleName());
 
         FallbackMethod fallbackMethod = MethodProvider.getInstance().getFallbackMethod(obj.getClass(), method);
         if (fallbackMethod.isPresent()) {

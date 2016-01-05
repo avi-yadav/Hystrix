@@ -113,12 +113,18 @@ public class MethodExecutionAction extends CommandAction {
             if (isCompileWeaving() && metaHolder.getAjcMethod() != null) {
                 result = invokeAjcMethod(metaHolder.getAjcMethod(), o, metaHolder, args);
             } else {
-                result = m.invoke(o, args);
+                if(metaHolder.getMethodInvocation() != null) {
+                    result = metaHolder.getMethodInvocation().proceed();
+                } else {
+                    result = m.invoke(o, args);
+                }
             }
         } catch (IllegalAccessException e) {
             propagateCause(e);
         } catch (InvocationTargetException e) {
             propagateCause(e);
+        } catch (Throwable throwable) {
+            propagateCause(throwable);
         }
         return result;
     }
