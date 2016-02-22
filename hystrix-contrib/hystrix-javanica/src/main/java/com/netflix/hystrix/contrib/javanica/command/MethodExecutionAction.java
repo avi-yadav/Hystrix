@@ -16,6 +16,7 @@
 package com.netflix.hystrix.contrib.javanica.command;
 
 
+import com.netflix.hystrix.contrib.javanica.aop.AopType;
 import com.netflix.hystrix.contrib.javanica.command.closure.Closure;
 import com.netflix.hystrix.contrib.javanica.command.closure.ClosureFactoryRegistry;
 import com.netflix.hystrix.contrib.javanica.exception.CommandActionExecutionException;
@@ -24,6 +25,7 @@ import com.netflix.hystrix.contrib.javanica.exception.ExceptionUtils;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import static com.netflix.hystrix.contrib.javanica.utils.EnvUtils.getAopType;
 import static com.netflix.hystrix.contrib.javanica.utils.EnvUtils.isCompileWeaving;
 import static com.netflix.hystrix.contrib.javanica.utils.ajc.AjcUtils.invokeAjcMethod;
 
@@ -110,14 +112,12 @@ public class MethodExecutionAction extends CommandAction {
         Object result = null;
         try {
             m.setAccessible(true); // suppress Java language access
-            if (isCompileWeaving() && metaHolder.getAjcMethod() != null) {
+            if(AopType.GUICE == getAopType() && metaHolder.getMethodInvocation() != null) {
+                result = metaHolder.getMethodInvocation().proceed();
+            } else if(isCompileWeaving() && metaHolder.getAjcMethod() != null) {
                 result = invokeAjcMethod(metaHolder.getAjcMethod(), o, metaHolder, args);
             } else {
-                if(metaHolder.getMethodInvocation() != null) {
-                    result = metaHolder.getMethodInvocation().proceed();
-                } else {
-                    result = m.invoke(o, args);
-                }
+                result = m.invoke(o, args);
             }
         } catch (IllegalAccessException e) {
             propagateCause(e);
