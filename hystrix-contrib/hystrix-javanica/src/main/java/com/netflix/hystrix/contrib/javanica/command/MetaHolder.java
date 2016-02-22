@@ -307,10 +307,6 @@ public class MetaHolder {
             return this;
         }
 
-        public MethodInvocation getMethodInvocation() {
-            return methodInvocation;
-        }
-
         public Builder methodInvocation(MethodInvocation methodInvocation) {
             this.methodInvocation = methodInvocation;
             return this;
