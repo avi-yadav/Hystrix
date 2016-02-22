@@ -15,6 +15,7 @@
  */
 package com.netflix.hystrix.contrib.javanica.utils;
 
+import com.netflix.hystrix.contrib.javanica.aop.AopType;
 import com.netflix.hystrix.contrib.javanica.aop.WeavingMode;
 
 import java.util.Arrays;
@@ -27,6 +28,14 @@ public final class EnvUtils {
 
     }
 
+    public static AopType getAopType() {
+        String aopTypeParam = System.getProperty("aopType", AopType.ASPECTJ.name()).toUpperCase();
+        AopType aopType = AopType.valueOf(aopTypeParam);
+        if(aopType == null)
+            throw new IllegalArgumentException("wrong 'aopType' property, supported: " + Arrays.toString(AopType.values()) + ", actual = " + aopTypeParam);
+        return aopType;
+    }
+
     public static WeavingMode getWeavingMode() {
         String wavingModeParam = System.getProperty("weavingMode", WeavingMode.RUNTIME.name()).toUpperCase();
         WeavingMode weavingMode = WeavingMode.valueOf(wavingModeParam);
@@ -36,6 +45,6 @@ public final class EnvUtils {
     }
 
     public static boolean isCompileWeaving() {
-        return WeavingMode.COMPILE == getWeavingMode();
+        return (AopType.ASPECTJ == getAopType()) && (WeavingMode.COMPILE == getWeavingMode());
     }
 }
