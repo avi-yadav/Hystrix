@@ -116,24 +116,24 @@ dependencies {
     testCompile 'log4j:log4j:1.2.17'
     testCompile 'org.slf4j:slf4j-log4j12:1.7.7'
 }
-//version = 1.6
+version = '1.5-RC'
 
-//apply plugin: 'java'
-//apply plugin: 'maven-publish'
-//
-//publishing {
-//    publications {
-//        nebula(MavenPublication) {
-//            from components.java
-//        }
-//    }
-//}
-//
-//publishing {
-//    repositories {
-//        maven {
-//            version = '1.0mvn-SNAPSHOT'
-//            url "file://Users/gautham.srinivas/.m2/repository"
-//        }
-//    }
-//}
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+
+publishing {
+    publications {
+        nebula(MavenPublication) {
+            //from components.java
+        }
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            version = '1.5-RC'
+            url "http://artifactory.nm.flipkart.com:8081/artifactory/libs-releases-local"
+        }
+    }
+}

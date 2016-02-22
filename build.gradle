@@ -15,7 +15,7 @@ plugins {
 ext {
     githubProjectName = rootProject.name    
 }
-
+version = '1.5-RC'
 subprojects {
     apply plugin: 'nebula.netflixoss'
     apply plugin: 'java'
@@ -29,6 +29,8 @@ subprojects {
     }
 
     group = "com.netflix.${githubProjectName}"
+    version = "1.5-RC"
+
 
     eclipse {
         classpath {
